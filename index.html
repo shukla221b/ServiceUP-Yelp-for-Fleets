@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yelp for Fleets - Fleet Management Marketplace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>Yelp for Fleets</span>
+            </div>
+            <div class="nav-toggle" onclick="toggleUserType()">
+                <span id="userTypeToggle">Switch to Shop View</span>
+            </div>
+            <div class="nav-user">
+                <i class="fas fa-user-circle"></i>
+                <span id="currentUser">Fleet Manager</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Fleet Manager Views -->
+    <div id="fleetViews" class="view-container">
+        <!-- Fleet Landing Page -->
+        <div id="fleetLanding" class="page active">
+            <div class="hero-section">
+                <h1>Find Reliable Repair Shops for Your Fleet</h1>
+                <p>Connect with verified shops that understand fleet operations and minimize downtime</p>
+                
+                <div class="search-container">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Find repair shops near..." id="locationSearch">
+                    </div>
+                    <button class="search-btn" onclick="showSearchResults()">Search Shops</button>
+                </div>
+
+                <div class="advanced-filters">
+                    <h3>Smart Search & Filtering</h3>
+                    <div class="filter-sections">
+                        <div class="filter-section">
+                            <h4>Asset Type</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" value="reefer-truck">
+                                    <span>Reefer Truck</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="cab">
+                                    <span>Cab</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="trailer">
+                                    <span>Trailer</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="delivery-van">
+                                    <span>Delivery Van</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Service Needed</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" value="gate-repair">
+                                    <span>Gate Repair</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="engine">
+                                    <span>Engine Service</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="brake">
+                                    <span>Brake System</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="refrigeration">
+                                    <span>Refrigeration</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Certifications</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" value="dot-inspector">
+                                    <span>DOT Inspector</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="ase">
+                                    <span>ASE Certified</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="oem">
+                                    <span>OEM Certified</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="ev">
+                                    <span>EV Certified</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4>Availability</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" value="24-7">
+                                    <span>24/7 Service</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="emergency">
+                                    <span>Emergency Response</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" value="same-day">
+                                    <span>Same Day Service</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button class="btn-secondary" onclick="clearFilters()">Clear All</button>
+                        <button class="btn-primary" onclick="applyFilters()">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-section">
+                <h3>Recent Bookings</h3>
+                <div class="booking-card">
+                    <div class="booking-info">
+                        <h4>Metro Auto Repair</h4>
+                        <p>Brake System Repair - Truck #FL-001</p>
+                        <span class="status completed">Completed</span>
+                    </div>
+                    <div class="booking-actions">
+                        <button class="btn-secondary" onclick="showLeadManagement()">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Page -->
+        <div id="searchResults" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showFleetLanding()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <h2>Repair Shops Near You</h2>
+            </div>
+
+            <div class="results-container">
+                <div class="shop-card" onclick="showShopDetail('metro-auto')">
+                    <div class="shop-header">
+                        <h3>Metro Auto Repair</h3>
+                        <div class="rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.7 (127 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="shop-badges">
+                        <span class="badge verified">Fleet Verified</span>
+                        <span class="badge certified">ASE Certified</span>
+                        <span class="badge dot">DOT Inspector</span>
+                    </div>
+                    <div class="verified-credentials">
+                        <div class="credential-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Insured: $2M Liability</span>
+                        </div>
+                        <div class="credential-item">
+                            <i class="fas fa-certificate"></i>
+                            <span>Licensed: CA #12345</span>
+                        </div>
+                        <div class="credential-item">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>5 ASE Master Techs</span>
+                        </div>
+                    </div>
+                    <div class="shop-metrics">
+                        <div class="metric">
+                            <i class="fas fa-clock"></i>
+                            <span>2.5 days avg</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-check-circle"></i>
+                            <span>98% on-time</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>2.4 mi away</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-tools"></i>
+                            <span>Specialized Equipment</span>
+                        </div>
+                    </div>
+                    <div class="shop-services">
+                        <span class="service-tag">Commercial Trucks</span>
+                        <span class="service-tag">EV Fleet</span>
+                        <span class="service-tag">Emergency Service</span>
+                    </div>
+                    <button class="btn-primary">View Profile</button>
+                </div>
+
+                <div class="shop-card" onclick="showShopDetail('premier-fleet')">
+                    <div class="shop-header">
+                        <h3>Premier Fleet Services</h3>
+                        <div class="rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.9 (89 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="shop-badges">
+                        <span class="badge verified">Fleet Verified</span>
+                        <span class="badge certified">OEM Certified</span>
+                    </div>
+                    <div class="shop-metrics">
+                        <div class="metric">
+                            <i class="fas fa-clock"></i>
+                            <span>1.8 days avg</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-check-circle"></i>
+                            <span>99% on-time</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>5.1 mi away</span>
+                        </div>
+                    </div>
+                    <div class="shop-services">
+                        <span class="service-tag">Heavy Duty</span>
+                        <span class="service-tag">24/7 Service</span>
+                        <span class="service-tag">Parts Guarantee</span>
+                    </div>
+                    <button class="btn-primary">View Profile</button>
+                </div>
+
+                <div class="shop-card" onclick="showShopDetail('eco-fleet')">
+                    <div class="shop-header">
+                        <h3>Eco Fleet Solutions</h3>
+                        <div class="rating">
+                            <span class="stars">⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.3 (156 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="shop-badges">
+                        <span class="badge verified">Fleet Verified</span>
+                        <span class="badge certified">EV Certified</span>
+                    </div>
+                    <div class="shop-metrics">
+                        <div class="metric">
+                            <i class="fas fa-clock"></i>
+                            <span>3.2 days avg</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-check-circle"></i>
+                            <span>95% on-time</span>
+                        </div>
+                        <div class="metric">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>3.7 mi away</span>
+                        </div>
+                    </div>
+                    <div class="shop-services">
+                        <span class="service-tag">Electric Vehicles</span>
+                        <span class="service-tag">Hybrid Systems</span>
+                        <span class="service-tag">Green Fleet</span>
+                    </div>
+                    <button class="btn-primary">View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Detail Page -->
+        <div id="shopDetail" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showSearchResults()">
+                    <i class="fas fa-arrow-left"></i> Back to Results
+                </button>
+                <h2 id="shopDetailTitle">Metro Auto Repair</h2>
+            </div>
+
+            <div class="shop-detail-container">
+                <div class="shop-overview">
+                    <div class="shop-info">
+                        <div class="shop-header-detail">
+                            <h1>Metro Auto Repair</h1>
+                            <div class="rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.7 (127 reviews)</span>
+                            </div>
+                        </div>
+                        <div class="shop-badges">
+                            <span class="badge verified">Fleet Verified</span>
+                            <span class="badge certified">ASE Certified</span>
+                        </div>
+                        <p class="shop-description">
+                            Specializing in commercial fleet maintenance with 15+ years of experience. 
+                            We understand the importance of minimizing downtime and keeping your fleet on the road.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="detail-tabs">
+                    <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+                    <button class="tab-btn" onclick="showTab('performance')">Performance</button>
+                    <button class="tab-btn" onclick="showTab('reviews')">Reviews</button>
+                    <button class="tab-btn" onclick="showTab('availability')">Availability</button>
+                </div>
+
+                <div id="overview-tab" class="tab-content active">
+                    <div class="services-section">
+                        <h3>Services Offered</h3>
+                        <div class="services-grid">
+                            <div class="service-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Engine Repair</span>
+                            </div>
+                            <div class="service-item">
+                                <i class="fas fa-circle"></i>
+                                <span>Brake Systems</span>
+                            </div>
+                            <div class="service-item">
+                                <i class="fas fa-bolt"></i>
+                                <span>Electrical Systems</span>
+                            </div>
+                            <div class="service-item">
+                                <i class="fas fa-tools"></i>
+                                <span>Transmission</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="specialization-section">
+                        <h3>Fleet Specialization</h3>
+                        <div class="specialization-list">
+                            <div class="spec-item">
+                                <i class="fas fa-truck"></i>
+                                <span>Commercial Trucks (Class 6-8)</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-bolt"></i>
+                                <span>Electric Fleet Vehicles</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-ambulance"></i>
+                                <span>Emergency Vehicles</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="performance-tab" class="tab-content">
+                    <div class="performance-metrics">
+                        <h3>Performance Metrics</h3>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value">2.5 days</div>
+                                <div class="metric-label">Average Turnaround</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">98%</div>
+                                <div class="metric-label">On-Time Completion</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">24/7</div>
+                                <div class="metric-label">Emergency Service</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">2 years</div>
+                                <div class="metric-label">Warranty Coverage</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="reviews-tab" class="tab-content">
+                    <div class="reviews-section">
+                        <h3>Fleet Reviews</h3>
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <strong>ABC Logistics</strong>
+                                    <span class="review-date">2 weeks ago</span>
+                                </div>
+                                <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="review-text">
+                                "Excellent service for our delivery fleet. They completed the brake repair 
+                                ahead of schedule and provided detailed documentation. Highly recommended."
+                            </p>
+                        </div>
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <strong>City Transit Co.</strong>
+                                    <span class="review-date">1 month ago</span>
+                                </div>
+                                <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="review-text">
+                                "Professional team that understands fleet operations. They worked around 
+                                our schedule and minimized bus downtime. Great communication throughout."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="availability-tab" class="tab-content">
+                    <div class="availability-section">
+                        <h3>Available Time Slots</h3>
+                        <div class="calendar-grid">
+                            <div class="time-slot available" onclick="selectTimeSlot('2024-01-15-09:00')">
+                                <span class="date">Jan 15</span>
+                                <span class="time">9:00 AM</span>
+                            </div>
+                            <div class="time-slot available" onclick="selectTimeSlot('2024-01-15-14:00')">
+                                <span class="date">Jan 15</span>
+                                <span class="time">2:00 PM</span>
+                            </div>
+                            <div class="time-slot available" onclick="selectTimeSlot('2024-01-16-10:00')">
+                                <span class="date">Jan 16</span>
+                                <span class="time">10:00 AM</span>
+                            </div>
+                            <div class="time-slot booked">
+                                <span class="date">Jan 16</span>
+                                <span class="time">2:00 PM</span>
+                                <span class="status">Booked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-actions">
+                    <button class="btn-primary large" onclick="showQuoteRequest()">Request Quote</button>
+                    <button class="btn-secondary large" onclick="showQuoteRequest()">Book Appointment</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote Request Page -->
+        <div id="quoteRequest" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showShopDetail()">
+                    <i class="fas fa-arrow-left"></i> Back to Shop
+                </button>
+                <h2>Request Quote</h2>
+            </div>
+
+            <div class="quote-form-container">
+                <form class="quote-form" onsubmit="submitQuoteRequest(event)">
+                    <div class="form-section">
+                        <h3>Vehicle Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Vehicle Type</label>
+                                <select required>
+                                    <option value="">Select vehicle type</option>
+                                    <option value="reefer-truck">Reefer Truck</option>
+                                    <option value="cab">Cab</option>
+                                    <option value="trailer">Trailer</option>
+                                    <option value="delivery-van">Delivery Van</option>
+                                    <option value="bus">Transit Bus</option>
+                                    <option value="ev">Electric Vehicle</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>License Plate</label>
+                                <input type="text" placeholder="FL-001" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>VIN Number</label>
+                                <div class="vin-lookup">
+                                    <input type="text" placeholder="Enter VIN for auto-population" id="vinInput">
+                                    <button type="button" class="btn-secondary" onclick="lookupVIN()">Lookup</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Fleet ID</label>
+                                <input type="text" placeholder="Fleet Vehicle ID" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Repair Details</h3>
+                        <div class="form-group">
+                            <label>Service Type</label>
+                            <select required>
+                                <option value="">Select service type</option>
+                                <option value="gate-repair">Gate Repair</option>
+                                <option value="engine">Engine Service</option>
+                                <option value="brake">Brake System</option>
+                                <option value="refrigeration">Refrigeration</option>
+                                <option value="electrical">Electrical System</option>
+                                <option value="transmission">Transmission</option>
+                                <option value="inspection">DOT Inspection</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Description</label>
+                            <textarea placeholder="Describe the problem in detail..." rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Photos/Documents</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="photoUpload" multiple accept="image/*,.pdf" style="display: none;">
+                                <div class="upload-placeholder" onclick="document.getElementById('photoUpload').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload photos or diagnostic reports</p>
+                                    <span>Supports: JPG, PNG, PDF (Max 10MB each)</span>
+                                </div>
+                                <div id="uploadedFiles" class="uploaded-files"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Desired Completion Time</label>
+                            <select required>
+                                <option value="">Select timeframe</option>
+                                <option value="asap">ASAP (Emergency)</option>
+                                <option value="24h">Within 24 hours</option>
+                                <option value="48h">Within 48 hours</option>
+                                <option value="week">Within a week</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Digital Record Trail</h3>
+                        <div class="record-trail">
+                            <div class="trail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Request created: <strong id="requestTime"></strong></span>
+                            </div>
+                            <div class="trail-item">
+                                <i class="fas fa-user"></i>
+                                <span>Fleet Manager: <strong>John Smith (ABC Logistics)</strong></span>
+                            </div>
+                            <div class="trail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Location: <strong>San Francisco, CA</strong></span>
+                            </div>
+                            <div class="trail-item">
+                                <i class="fas fa-barcode"></i>
+                                <span>Request ID: <strong id="requestId"></strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        <div class="form-group">
+                            <label>Special Requirements</label>
+                            <textarea placeholder="Any special requirements or notes..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Preferences</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span>Email notifications</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span>SMS updates</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox">
+                                    <span>Phone calls for urgent updates</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary large">Send Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lead Management Page -->
+        <div id="leadManagement" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showFleetLanding()">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h2>Request Status</h2>
+            </div>
+
+            <div class="lead-status-container">
+                <div class="status-tabs">
+                    <button class="status-tab active" onclick="showStatusTab('active')">Active Requests</button>
+                    <button class="status-tab" onclick="showStatusTab('completed')">Completed</button>
+                </div>
+
+                <div id="active-requests" class="status-content active">
+                    <div class="request-card">
+                        <div class="request-header">
+                            <h4>Brake System Repair - Truck #FL-001</h4>
+                            <span class="status-badge in-review">In Review</span>
+                        </div>
+                        <div class="request-details">
+                            <p><strong>Shop:</strong> Metro Auto Repair</p>
+                            <p><strong>Submitted:</strong> 2 hours ago</p>
+                            <p><strong>Expected Response:</strong> Within 30 minutes</p>
+                        </div>
+                        <div class="status-updates">
+                            <h5>Real-Time Updates</h5>
+                            <div class="update-timeline">
+                                <div class="update-item">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Request sent to 3 shops</span>
+                                    <small>2 hours ago</small>
+                                </div>
+                                <div class="update-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Metro Auto viewed your request</span>
+                                    <small>1 hour ago</small>
+                                </div>
+                                <div class="update-item pending">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Waiting for quote response</span>
+                                    <small>In progress</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn-secondary">View Details</button>
+                            <button class="btn-primary">Message Shop</button>
+                            <button class="btn-secondary" onclick="requestUpdate()">Request Update</button>
+                        </div>
+                    </div>
+
+                    <div class="request-card">
+                        <div class="request-header">
+                            <h4>Engine Diagnostic - Van #FL-003</h4>
+                            <span class="status-badge quoted">Quoted</span>
+                        </div>
+                        <div class="request-details">
+                            <p><strong>Shop:</strong> Premier Fleet Services</p>
+                            <p><strong>Quote:</strong> $520 - Est. 2 days</p>
+                            <p><strong>Received:</strong> 1 hour ago</p>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn-secondary">View Quote</button>
+                            <button class="btn-primary">Accept Quote</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="completed-requests" class="status-content">
+                    <div class="request-card">
+                        <div class="request-header">
+                            <h4>Transmission Repair - Truck #FL-002</h4>
+                            <span class="status-badge completed">Completed</span>
+                        </div>
+                        <div class="request-details">
+                            <p><strong>Shop:</strong> Metro Auto Repair</p>
+                            <p><strong>Completed:</strong> 3 days ago</p>
+                            <p><strong>Final Cost:</strong> $1,250</p>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn-secondary">View Invoice</button>
+                            <button class="btn-primary" onclick="showRatingModal()">Rate & Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Repair Shop Views -->
+    <div id="shopViews" class="view-container">
+        <!-- Shop Dashboard -->
+        <div id="shopDashboard" class="page">
+            <div class="page-header">
+                <h2>Shop Dashboard</h2>
+                <div class="shop-badge">
+                    <span class="badge verified">Fleet Verified</span>
+                </div>
+            </div>
+
+            <div class="dashboard-container">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value">12</div>
+                            <div class="kpi-label">New Leads This Week</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value">78%</div>
+                            <div class="kpi-label">Conversion Rate</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value">4.7</div>
+                            <div class="kpi-label">Average Rating</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value">2.5 days</div>
+                            <div class="kpi-label">Avg Turnaround</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button class="btn-primary large" onclick="showNewLeads()">View New Leads</button>
+                    <button class="btn-secondary large" onclick="showAvailability()">Manage Availability</button>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>New quote request</strong> from ABC Logistics</p>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn-primary small" onclick="showNewLeads()">Respond</button>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>Job completed</strong> for City Transit Co.</p>
+                            <span class="activity-time">1 day ago</span>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn-secondary small">View Details</button>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>5-star review received</strong> from Metro Delivery</p>
+                            <span class="activity-time">2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showNewLeads()">
+                            <i class="fas fa-bell"></i>
+                            <span>New Leads (3)</span>
+                        </button>
+                        <button class="action-btn" onclick="sendStatusUpdate()">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <span>Send Updates</span>
+                        </button>
+                        <button class="action-btn" onclick="showPerformanceInsights()">
+                            <i class="fas fa-chart-line"></i>
+                            <span>View Analytics</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Leads Page -->
+        <div id="newLeads" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showShopDashboard()">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h2>New Leads</h2>
+            </div>
+
+            <div class="leads-container">
+                <div class="lead-card">
+                    <div class="lead-header">
+                        <h4>ABC Logistics</h4>
+                        <span class="lead-time">2 hours ago</span>
+                    </div>
+                    <div class="lead-details">
+                        <p><strong>Vehicle:</strong> Commercial Truck #FL-001</p>
+                        <p><strong>Issue:</strong> Brake system repair needed</p>
+                        <p><strong>Requested Completion:</strong> Within 48 hours</p>
+                        <p><strong>Distance:</strong> 2.4 miles away</p>
+                    </div>
+                    <div class="lead-actions">
+                        <button class="btn-primary" onclick="showLeadDetail('abc-logistics')">View Details</button>
+                        <button class="btn-secondary">Decline</button>
+                    </div>
+                </div>
+
+                <div class="lead-card">
+                    <div class="lead-header">
+                        <h4>Metro Delivery</h4>
+                        <span class="lead-time">4 hours ago</span>
+                    </div>
+                    <div class="lead-details">
+                        <p><strong>Vehicle:</strong> Delivery Van #MD-005</p>
+                        <p><strong>Issue:</strong> Engine diagnostic required</p>
+                        <p><strong>Requested Completion:</strong> Within a week</p>
+                        <p><strong>Distance:</strong> 5.1 miles away</p>
+                    </div>
+                    <div class="lead-actions">
+                        <button class="btn-primary" onclick="showLeadDetail('metro-delivery')">View Details</button>
+                        <button class="btn-secondary">Decline</button>
+                    </div>
+                </div>
+
+                <div class="lead-card">
+                    <div class="lead-header">
+                        <h4>Green Fleet Co.</h4>
+                        <span class="lead-time">6 hours ago</span>
+                    </div>
+                    <div class="lead-details">
+                        <p><strong>Vehicle:</strong> Electric Truck #GF-012</p>
+                        <p><strong>Issue:</strong> Battery system maintenance</p>
+                        <p><strong>Requested Completion:</strong> ASAP (Emergency)</p>
+                        <p><strong>Distance:</strong> 3.7 miles away</p>
+                    </div>
+                    <div class="lead-actions">
+                        <button class="btn-primary" onclick="showLeadDetail('green-fleet')">View Details</button>
+                        <button class="btn-secondary">Decline</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lead Detail/Quoting Page -->
+        <div id="leadDetail" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showNewLeads()">
+                    <i class="fas fa-arrow-left"></i> Back to Leads
+                </button>
+                <h2>Lead Details</h2>
+            </div>
+
+            <div class="lead-detail-container">
+                <div class="lead-summary">
+                    <h3>ABC Logistics</h3>
+                    <div class="lead-info">
+                        <p><strong>Vehicle Type:</strong> Commercial Truck</p>
+                        <p><strong>License Plate:</strong> FL-001</p>
+                        <p><strong>Issue Description:</strong> Brake system making grinding noise, reduced stopping power</p>
+                        <p><strong>Desired Completion:</strong> Within 48 hours</p>
+                        <p><strong>Distance from Shop:</strong> 2.4 miles</p>
+                    </div>
+                </div>
+
+                <div class="quote-form">
+                    <h3>Submit Quote</h3>
+                    <form onsubmit="submitQuote(event)">
+                        <div class="form-group">
+                            <label>Proposed Price</label>
+                            <div class="price-input">
+                                <span class="currency">$</span>
+                                <input type="number" placeholder="520" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Estimated Completion Time</label>
+                            <select required>
+                                <option value="">Select timeframe</option>
+                                <option value="24h">24 hours</option>
+                                <option value="48h">48 hours</option>
+                                <option value="72h">72 hours</option>
+                                <option value="week">1 week</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Add-on Services</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" value="pickup">
+                                    <span>Pickup & Drop-off Service (+$50)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" value="warranty">
+                                    <span>Extended Warranty (+$100)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" value="priority">
+                                    <span>Priority Service (+$75)</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Notes</label>
+                            <textarea placeholder="Any additional information or recommendations..." rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary large">Send Quote</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance & Insights Page -->
+        <div id="performanceInsights" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showShopDashboard()">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h2>Performance & Insights</h2>
+            </div>
+
+            <div class="insights-container">
+                <div class="performance-overview">
+                    <h3>Performance Overview</h3>
+                    <div class="performance-grid">
+                        <div class="performance-card">
+                            <div class="performance-metric">
+                                <div class="metric-value">98%</div>
+                                <div class="metric-label">On-Time Rate</div>
+                                <div class="metric-comparison">vs 85% local average</div>
+                            </div>
+                        </div>
+                        <div class="performance-card">
+                            <div class="performance-metric">
+                                <div class="metric-value">4.7</div>
+                                <div class="metric-label">Fleet Rating</div>
+                                <div class="metric-comparison">vs 4.2 local average</div>
+                            </div>
+                        </div>
+                        <div class="performance-card">
+                            <div class="performance-metric">
+                                <div class="metric-value">65%</div>
+                                <div class="metric-label">Repeat Clients</div>
+                                <div class="metric-comparison">vs 45% local average</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="market-positioning">
+                    <h3>Market Position</h3>
+                    <div class="positioning-card">
+                        <div class="positioning-content">
+                            <h4>🏆 Top 15% for EV Fleet Repairs in SF</h4>
+                            <p>Your shop ranks in the top 15% for electric vehicle fleet repairs in the San Francisco area. 
+                            This specialization gives you a competitive advantage in the growing EV market.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="benchmark-chart">
+                    <h3>Performance vs Market</h3>
+                    <div class="chart-placeholder">
+                        <div class="chart-bars">
+                            <div class="chart-bar">
+                                <div class="bar-label">On-Time Rate</div>
+                                <div class="bar-container">
+                                    <div class="bar shop" style="width: 98%"></div>
+                                    <div class="bar market" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="chart-bar">
+                                <div class="bar-label">Customer Rating</div>
+                                <div class="bar-container">
+                                    <div class="bar shop" style="width: 94%"></div>
+                                    <div class="bar market" style="width: 84%"></div>
+                                </div>
+                            </div>
+                            <div class="chart-bar">
+                                <div class="bar-label">Repeat Business</div>
+                                <div class="bar-container">
+                                    <div class="bar shop" style="width: 65%"></div>
+                                    <div class="bar market" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color shop"></div>
+                                <span>Your Shop</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color market"></div>
+                                <span>Market Average</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Management Page -->
+        <div id="profileManagement" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showShopDashboard()">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h2>Profile Management</h2>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-form">
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Shop Name</label>
+                                <input type="text" value="Metro Auto Repair" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" value="(555) 123-4567" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" value="123 Fleet Street, San Francisco, CA 94102" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Certifications</h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked>
+                                <span>ASE Certified</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked>
+                                <span>OEM Certified</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox">
+                                <span>EV Certified</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked>
+                                <span>Fleet Verified</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Services Offered</h3>
+                        <div class="services-selection">
+                            <div class="service-category">
+                                <h4>Vehicle Types</h4>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" checked>
+                                        <span>Commercial Trucks</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" checked>
+                                        <span>Delivery Vans</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox">
+                                        <span>Transit Buses</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox">
+                                        <span>Electric Vehicles</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="service-category">
+                                <h4>Repair Types</h4>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" checked>
+                                        <span>Engine Repair</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" checked>
+                                        <span>Brake Systems</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" checked>
+                                        <span>Electrical Systems</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox">
+                                        <span>Transmission</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Pricing Transparency</h3>
+                        <div class="pricing-info">
+                            <div class="form-group">
+                                <label>Average Job Range</label>
+                                <div class="price-range">
+                                    <input type="number" placeholder="200" value="200">
+                                    <span>to</span>
+                                    <input type="number" placeholder="2000" value="2000">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Fleet Experience</label>
+                                <textarea placeholder="List major fleet clients or brands you've worked with..." rows="3">ABC Logistics, City Transit Co., Metro Delivery, Green Fleet Co.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-primary large">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="ratingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rate & Review</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rating-input">
+                    <label>Overall Rating</label>
+                    <div class="star-rating">
+                        <span class="star" onclick="setRating(1)">⭐</span>
+                        <span class="star" onclick="setRating(2)">⭐</span>
+                        <span class="star" onclick="setRating(3)">⭐</span>
+                        <span class="star" onclick="setRating(4)">⭐</span>
+                        <span class="star" onclick="setRating(5)">⭐</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Review</label>
+                    <textarea placeholder="Share your experience..." rows="4"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="submitRating()">Submit Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusUpdateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Send Status Update</h3>
+                <button class="modal-close" onclick="closeStatusModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Job</label>
+                    <select id="jobSelect">
+                        <option value="">Choose a job to update</option>
+                        <option value="abc-logistics">ABC Logistics - Brake Repair</option>
+                        <option value="metro-delivery">Metro Delivery - Engine Diagnostic</option>
+                        <option value="green-fleet">Green Fleet - Battery Service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status Update</label>
+                    <div class="status-options">
+                        <button class="status-option" onclick="selectStatus('diagnosed')">
+                            <i class="fas fa-search"></i>
+                            <span>Diagnosed Issue</span>
+                        </button>
+                        <button class="status-option" onclick="selectStatus('parts-ordered')">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Parts Ordered</span>
+                        </button>
+                        <button class="status-option" onclick="selectStatus('in-progress')">
+                            <i class="fas fa-wrench"></i>
+                            <span>Work In Progress</span>
+                        </button>
+                        <button class="status-option" onclick="selectStatus('testing')">
+                            <i class="fas fa-vial"></i>
+                            <span>Testing & Quality Check</span>
+                        </button>
+                        <button class="status-option" onclick="selectStatus('completed')">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Job Completed</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Additional Message (Optional)</label>
+                    <textarea placeholder="Add any additional details..." rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="sendStatusUpdate()">Send Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
